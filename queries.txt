@@ -1,0 +1,72 @@
+# NanoDB Workload File — 50 Queries (TPC-H Schema)
+# Lines starting with # are comments
+
+# ── Simple SELECTs ────────────────────────────────────────────────────────────
+SELECT * FROM customer WHERE c_custkey == 1
+SELECT * FROM customer WHERE c_custkey == 50
+SELECT * FROM customer WHERE c_custkey == 100
+SELECT * FROM customer WHERE c_custkey == 200
+SELECT * FROM customer WHERE c_custkey == 300
+
+# ── Comparison queries ────────────────────────────────────────────────────────
+SELECT * FROM customer WHERE c_acctbal > 8000
+SELECT * FROM customer WHERE c_acctbal < 2000
+SELECT * FROM customer WHERE c_nationkey == 5
+SELECT * FROM customer WHERE c_nationkey == 10
+SELECT * FROM customer WHERE c_nationkey == 15
+
+# ── Segment filters ───────────────────────────────────────────────────────────
+SELECT * FROM customer WHERE c_mktsegment == BUILDING
+SELECT * FROM customer WHERE c_mktsegment == AUTOMOBILE
+SELECT * FROM customer WHERE c_mktsegment == MACHINERY
+SELECT * FROM customer WHERE c_mktsegment == HOUSEHOLD
+SELECT * FROM customer WHERE c_mktsegment == FURNITURE
+
+# ── AND conditions ────────────────────────────────────────────────────────────
+SELECT * FROM customer WHERE c_acctbal > 5000 AND c_nationkey == 3
+SELECT * FROM customer WHERE c_acctbal > 7000 AND c_mktsegment == BUILDING
+SELECT * FROM customer WHERE c_nationkey == 10 AND c_acctbal > 3000
+SELECT * FROM customer WHERE c_acctbal > 6000 AND c_acctbal < 9000
+SELECT * FROM customer WHERE c_nationkey > 10 AND c_nationkey < 20
+
+# ── OR conditions ─────────────────────────────────────────────────────────────
+SELECT * FROM customer WHERE c_nationkey == 0 OR c_nationkey == 1
+SELECT * FROM customer WHERE c_mktsegment == BUILDING OR c_acctbal > 9000
+SELECT * FROM customer WHERE c_acctbal < 1500 OR c_acctbal > 9500
+SELECT * FROM customer WHERE c_nationkey == 15 OR c_mktsegment == AUTOMOBILE
+SELECT * FROM customer WHERE c_nationkey == 24 OR c_nationkey == 0
+
+# ── Complex WHERE (AND + OR + parentheses) ────────────────────────────────────
+SELECT * FROM customer WHERE (c_acctbal > 5000 AND c_mktsegment == BUILDING) OR c_nationkey == 15
+SELECT * FROM customer WHERE (c_nationkey > 5 AND c_nationkey < 15) OR c_acctbal > 9000
+SELECT * FROM customer WHERE (c_acctbal > 3000 AND c_acctbal < 7000) AND c_mktsegment == AUTOMOBILE
+SELECT * FROM customer WHERE c_acctbal > 8500 AND (c_mktsegment == BUILDING OR c_mktsegment == FURNITURE)
+SELECT * FROM customer WHERE (c_nationkey == 10 OR c_nationkey == 20) AND c_acctbal > 4000
+
+# ── Orders table queries ───────────────────────────────────────────────────────
+SELECT * FROM orders WHERE o_orderkey == 1
+SELECT * FROM orders WHERE o_custkey == 5
+SELECT * FROM orders WHERE o_totalprice > 90000
+SELECT * FROM orders WHERE o_orderstatus == O
+SELECT * FROM orders WHERE o_orderstatus == F
+SELECT * FROM orders WHERE o_orderstatus == P
+SELECT * FROM orders WHERE o_totalprice > 50000 AND o_orderstatus == O
+SELECT * FROM orders WHERE o_custkey > 100 AND o_totalprice < 20000
+SELECT * FROM orders WHERE o_totalprice > 80000 OR o_orderstatus == P
+SELECT * FROM orders WHERE o_custkey == 10 OR o_custkey == 20
+
+# ── Lineitem table queries ────────────────────────────────────────────────────
+SELECT * FROM lineitem WHERE l_orderkey == 1
+SELECT * FROM lineitem WHERE l_quantity > 40
+SELECT * FROM lineitem WHERE l_extprice > 9000
+SELECT * FROM lineitem WHERE l_partkey == 5
+SELECT * FROM lineitem WHERE l_quantity > 30 AND l_extprice > 5000
+SELECT * FROM lineitem WHERE l_partkey < 10 AND l_quantity > 25
+
+# ── UPDATE (admin priority) ───────────────────────────────────────────────────
+UPDATE customer SET c_acctbal=9999 WHERE c_custkey == 1
+UPDATE orders SET o_orderstatus=F WHERE o_orderkey == 1
+
+# ── INSERT statements ─────────────────────────────────────────────────────────
+INSERT INTO customer VALUES 99901 TestCust1 3 7500 BUILDING
+INSERT INTO customer VALUES 99902 TestCust2 7 4200 AUTOMOBILE
